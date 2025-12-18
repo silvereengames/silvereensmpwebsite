@@ -3,9 +3,599 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Silvereen SMP | Season 3</title>
+    <meta name="description" content="Join Silvereen SMP - A Forge Anarchy Server with Trains, Stores, and more.">
+    
+    <!-- Google Fonts for a gaming look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #050506; /* Slightly darker, colder black */
+            --bg-card: #0f1013;
+            --text-main: #f0f8ff; /* AliceBlue for a cold tint */
+            --text-muted: #8899a6;
+            --accent: #b8f2ff; /* Electric bluish-white */
+            --accent-glow: rgba(184, 242, 255, 0.15); /* Cold glow */
+            --border: #222a30;
+            --discord: #5865F2;
+            --discord-hover: #4752C4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- Background Effects --- */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(200, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(200, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Faulty Electric Flicker Animation */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            41.99% { opacity: 1; }
+            42% { opacity: 0.8; }
+            43% { opacity: 0.3; } /* Changed from 0.1 to 0.3 */
+            43.01% { opacity: 1; }
+            45% { opacity: 0.8; }
+            46% { opacity: 1; }
+            47.99% { opacity: 1; }
+            48% { opacity: 0.8; }
+            49% { opacity: 0.3; } /* Changed from 0.1 to 0.3 */
+            49.01% { opacity: 1; }
+        }
+
+        /* Subtler Flicker for large elements */
+        @keyframes flicker-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+            51% { opacity: 1; }
+            52% { opacity: 0.6; }
+            53% { opacity: 1; }
+            80% { opacity: 1; }
+            81% { opacity: 0.9; }
+            82% { opacity: 1; }
+        }
+
+        /* --- Header / Hero --- */
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px 20px;
+            background: linear-gradient(to bottom, rgba(5, 10, 15, 0.9), transparent);
+        }
+
+        .logo-wrapper {
+            max-width: 1000px;
+            width: 100%;
+            filter: drop-shadow(0 0 20px rgba(184, 242, 255, 0.15)); /* Cold logo glow */
+            /* REMOVED flicker-subtle, keeping only fadeIn */
+            animation: fadeIn 1s ease-out; 
+        }
+
+        .logo-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* --- Main Content --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .season-badge {
+            display: inline-block;
+            background: rgba(184, 242, 255, 0.05);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px var(--accent-glow);
+            text-shadow: 0 0 5px var(--accent);
+            animation: flicker 4s infinite; /* Slow flicker */
+        }
+
+        /* --- Countdown Styles --- */
+        .status-container {
+            margin: 20px auto 60px auto; 
+            padding: 20px 40px;
+            background: rgba(10, 15, 20, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: block; 
+            width: fit-content; 
+            max-width: 95%;
+            min-width: 280px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+
+        .status-label {
+            display: block;
+            color: var(--accent);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .countdown-timer {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(184, 242, 255, 0.4);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+            animation: flicker-subtle 6s infinite; /* Subtle text flicker */
+        }
+
+        /* Mobile specific adjustments for countdown */
+        @media (max-width: 480px) {
+            .countdown-timer {
+                font-size: 1.8rem;
+            }
+            .status-container {
+                padding: 15px;
+                width: 90%;
+                min-width: auto;
+            }
+        }
+
+        .ended-message {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            padding: 10px;
+        }
+
+        .ended-link {
+            color: var(--discord);
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .ended-link:hover {
+            color: var(--discord-hover);
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 3.5rem; 
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            /* Colder gradient for text */
+            background: linear-gradient(180deg, #fff, #b8f2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            min-height: 1.2em; 
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .intro {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(184, 242, 255, 0.2);
+            animation: flicker 3s infinite alternate-reverse; /* Sync differently */
+        }
+
+        /* --- Features Grid --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 80px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            opacity: 0.6;
+            box-shadow: 0 0 10px var(--accent);
+            animation: flicker-subtle 8s infinite; /* Very slow flicker on cards */
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border-color: rgba(184, 242, 255, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.1));
+        }
+
+        .card h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            flex-grow: 1; 
+        }
+
+        /* --- Discord CTA --- */
+        .discord-section {
+            background: linear-gradient(145deg, #161a20, #0d1012);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 50px 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+
+        .discord-section h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--discord);
+            color: #fff;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 25px;
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+        }
+
+        .discord-btn:hover {
+            background-color: var(--discord-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.6);
+        }
+
+        .discord-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: auto;
+            padding: 40px;
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            background: #040405;
+        }
+
+        /* --- Mobile --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .grid { grid-template-columns: 1fr; }
+            .logo-wrapper { padding: 0 10px; }
+            
+            /* Stack header elements on mobile */
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+            .header-cta {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* --- New Header Apply Button --- */
+        .header-cta {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            background: rgba(88, 101, 242, 0.1);
+            border: 1px solid rgba(88, 101, 242, 0.5);
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            z-index: 10;
+        }
+
+        .header-cta:hover {
+            background: var(--discord);
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
 <body>
-    <p>Test</p>
+
+    <!-- Subtle Background Grid -->
+    <div class="bg-grid"></div>
+
+    <header>
+        <!-- New Apply Button -->
+        <a href="https://discord.gg/t6EDMwHV8e" target="_blank" class="header-cta">Apply to Join</a>
+
+        <div class="logo-wrapper">
+            <!-- Provided Logo URL -->
+            <img src="https://github.com/silvereengames/silvereensmp/blob/main/assets/logo.png?raw=true" alt="Silvereen SMP Banner">
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div style="animation: fadeIn 1s ease-out 0.2s forwards; opacity: 0; transform: translateY(20px);">
+            <div class="season-badge">Current: Season 3</div>
+
+            <!-- ID added for JS targeting -->
+            <h1 id="dynamic-headline">Order vs. Chaos</h1>
+            <p class="intro">
+                Silvereen SMP is a Forge server ruled by an <span class="highlight">unforgiving Government</span>. 
+                There is no "winner" here—only power. Form <span class="highlight">Alliances</span>, hoard resources, and see how much you can dominate before your empire crumbles from within.
+            </p>
+
+            <!-- Countdown Container - MOVED BELOW DESCRIPTION -->
+            <div id="status-container" class="status-container">
+                <span id="status-label" class="status-label">Loading Status...</span>
+                <div id="countdown-timer" class="countdown-timer">--d --h --m --s</div>
+            </div>
+        </div>
+
+        <div class="grid" style="animation: fadeIn 1s ease-out 0.4s forwards; opacity: 0; transform: translateY(20px);">
+            <!-- Feature 1 -->
+            <div class="card">
+                <span class="card-icon">🚂</span>
+                <h3>Fast Travel Rail</h3>
+                <p>Utilize the government-operated rail network for rapid transit across the world. Reliable transport to major hubs and Admin Shops.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="card">
+                <span class="card-icon">💰</span>
+                <h3>Economy & Laundering</h3>
+                <p>Use server currency at official stores. Permits are expensive—many choose to build secret storefronts and launder dirty money instead.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="card">
+                <span class="card-icon">🤝</span>
+                <h3>Alliance Warfare</h3>
+                <p>Solo survival is hard. Join forces with others to pool resources, build massive bases, and crush opposing factions in the struggle for dominance.</p>
+            </div>
+
+            <!-- Feature 4 - REPLACED -->
+            <div class="card">
+                <span class="card-icon">🏛️</span>
+                <h3>Fragile Empires</h3>
+                <p>Build massive bases and hoard wealth. But remember: the bigger you get, the bigger the target on your back. How long can you last?</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="card">
+                <span class="card-icon">🎯</span>
+                <h3>Wanted System</h3>
+                <p>Commit crimes and you may find a bounty on your head. Hunt down wanted players for cash, or become the most elusive fugitive.</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="card">
+                <span class="card-icon">🏗️</span>
+                <h3>Real Estate</h3>
+                <p>Buy protected plots in government cities for safety, or venture out into the unregulated wilderness to build for free—at your own risk.</p>
+            </div>
+        </div>
+
+        <div class="discord-section" style="animation: fadeIn 1s ease-out 0.6s forwards; opacity: 0; transform: translateY(20px);">
+            <h2>Join the Community</h2>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                We are a whitelist community to ensure quality gameplay. 
+                Apply on Discord to receive the modpack and server IP.
+            </p>
+            
+            <a href="https://discord.gg/t6EDMwHV8e" target="_blank" class="discord-btn">
+                <!-- SVG Discord Icon -->
+                <svg class="discord-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.564 13.564 0 0 0-.613 1.281 18.068 18.068 0 0 0-5.485 0 13.593 13.593 0 0 0-.617-1.281.077.077 0 0 0-.079-.037 19.736 19.736 0 0 0-4.885 1.515.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.419 0 1.334-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.419 0 1.334-.946 2.419-2.157 2.419z"/>
+                </svg>
+                Apply on Discord
+            </a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Silvereen SMP. Not affiliated with or approved by Mojang Studios.</p>
+    </footer>
+
+    <!-- Text Rotation Logic & Countdown -->
+    <script>
+        // Auto-update year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // --- Countdown Logic ---
+        // Dates are set to EST (UTC-5)
+        const launchDate = new Date("2025-12-21T12:00:00-05:00").getTime();
+        const closeDate = new Date("2026-01-05T12:00:00-05:00").getTime();
+        
+        const statusContainer = document.getElementById("status-container");
+        const statusLabel = document.getElementById("status-label");
+        const timerElement = document.getElementById("countdown-timer");
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            let targetDate;
+            let labelText;
+
+            // Determine State
+            if (now < launchDate) {
+                // Before Launch
+                targetDate = launchDate;
+                labelText = "Server Launches In:";
+            } else if (now < closeDate) {
+                // Active Season
+                targetDate = closeDate;
+                labelText = "Season 3 Ends In:";
+            } else {
+                // Event Ended
+                statusContainer.innerHTML = `
+                    <div class="ended-message">
+                        This event has ended. Thanks to everyone who participated.<br>
+                        <a href="https://discord.gg/t6EDMwHV8e" class="ended-link">Join the Discord</a> for information on the next event. See you soon!
+                    </div>
+                `;
+                return; // Stop the interval
+            }
+
+            statusLabel.textContent = labelText;
+
+            // Calculate Time
+            const distance = targetDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update UI
+            timerElement.textContent = 
+                `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+        }
+
+        // Run immediately and then every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+
+        const slogans = [
+            "Order vs. Chaos",
+            "Permits or Prison",
+            "Compliance is Optional",
+            "Strength in Numbers",
+            "Alliance Warfare",
+            "The Government is Watching",
+            "Forge Your Empire",
+            "Obey or Rebel",
+            "How Long Can You Last?",
+            "Everything Has A Price",
+            "Build. Trade. Betray.",
+            "Safe Zones Are For The Weak",
+            "Taxes are Mandatory (Kinda)",
+            "Please Don't Blow Up Spawn"
+        ];
+        
+        const headlineElement = document.getElementById("dynamic-headline");
+        let currentIndex = 0;
+
+        function rotateSlogan() {
+            // Add fade-out class
+            headlineElement.classList.add("fade-out");
+
+            // Wait for fade out to finish (500ms matches CSS transition)
+            setTimeout(() => {
+                // Change text
+                currentIndex = (currentIndex + 1) % slogans.length;
+                headlineElement.textContent = slogans[currentIndex];
+                
+                // Remove fade-out (triggers fade-in)
+                headlineElement.classList.remove("fade-out");
+            }, 500);
+        }
+
+        // Rotate every 4 seconds
+        setInterval(rotateSlogan, 4000);
+    </script>
+
 </body>
 </html>
